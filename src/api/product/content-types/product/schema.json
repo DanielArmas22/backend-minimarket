@@ -25,6 +25,12 @@
       "relation": "oneToOne",
       "target": "api::category.category",
       "mappedBy": "product"
+    },
+    "sales": {
+      "type": "relation",
+      "relation": "manyToMany",
+      "target": "api::sale.sale",
+      "mappedBy": "products"
     }
   }
 }
