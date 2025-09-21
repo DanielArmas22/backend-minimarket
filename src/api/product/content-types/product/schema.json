@@ -4,33 +4,55 @@
   "info": {
     "singularName": "product",
     "pluralName": "products",
-    "displayName": "Product "
+    "displayName": "Product"
   },
   "options": {
-    "draftAndPublish": false
+    "draftAndPublish": true
   },
   "pluginOptions": {},
   "attributes": {
-    "name": {
+    "descripcion": {
       "type": "string"
     },
-    "stock": {
-      "type": "integer"
+    "barCode": {
+      "type": "string",
+      "unique": true
     },
-    "price": {
+    "unidadMedida": {
+      "type": "string"
+    },
+    "precioUnitario": {
       "type": "decimal"
+    },
+    "stock": {
+      "type": "biginteger"
     },
     "category": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "api::category.category",
+      "inversedBy": "products"
+    },
+    "producto_promocions": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::producto-promocion.producto-promocion",
       "mappedBy": "product"
     },
-    "sales": {
+    "detail_order_buys": {
       "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::sale.sale",
-      "mappedBy": "products"
+      "relation": "oneToMany",
+      "target": "api::detail-order-buy.detail-order-buy",
+      "mappedBy": "product"
+    },
+    "detail_sales": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::detail-sale.detail-sale",
+      "mappedBy": "product"
+    },
+    "stockMin": {
+      "type": "integer"
     }
   }
 }

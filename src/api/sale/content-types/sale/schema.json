@@ -14,19 +14,22 @@
     "date": {
       "type": "datetime"
     },
-    "total": {
-      "type": "decimal"
-    },
-    "products": {
-      "type": "relation",
-      "relation": "manyToMany",
-      "target": "api::product.product",
-      "inversedBy": "sales"
-    },
-    "client": {
+    "users_permissions_user": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "api::client.client",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "sales"
+    },
+    "detail_sales": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::detail-sale.detail-sale",
+      "mappedBy": "sale"
+    },
+    "payment": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::pay.pay",
       "inversedBy": "sales"
     }
   }

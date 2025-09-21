@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "producto_promocions",
+  "info": {
+    "singularName": "producto-promocion",
+    "pluralName": "producto-promocions",
+    "displayName": "Product-Promotion"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "promotion": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::promotion.promotion",
+      "inversedBy": "producto_promocions"
+    },
+    "product": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product.product",
+      "inversedBy": "producto_promocions"
+    }
+  }
+}

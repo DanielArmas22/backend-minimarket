@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "pays",
+  "info": {
+    "singularName": "pay",
+    "pluralName": "pays",
+    "displayName": "Payment"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "fechaPago": {
+      "type": "date"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "payments"
+    },
+    "type_pay": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::type-buy.type-buy",
+      "inversedBy": "payments"
+    },
+    "sales": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::sale.sale",
+      "mappedBy": "payment"
+    }
+  }
+}

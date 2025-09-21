@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "type_buys",
+  "info": {
+    "singularName": "type-buy",
+    "pluralName": "type-buys",
+    "displayName": "Type-Payment"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "descripcion": {
+      "type": "string"
+    },
+    "estado": {
+      "type": "boolean"
+    },
+    "payments": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::pay.pay",
+      "mappedBy": "type_pay"
+    }
+  }
+}

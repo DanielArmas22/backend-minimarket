@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "detail_order_buys",
+  "info": {
+    "singularName": "detail-order-buy",
+    "pluralName": "detail-order-buys",
+    "displayName": "Detail-Order-Buy"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cantidad": {
+      "type": "integer"
+    },
+    "product": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product.product",
+      "inversedBy": "detail_order_buys"
+    },
+    "order_buy": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::order-buy.order-buy",
+      "inversedBy": "detail_order_buys"
+    }
+  }
+}

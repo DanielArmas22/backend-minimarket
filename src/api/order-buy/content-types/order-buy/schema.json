@@ -1,0 +1,42 @@
+{
+  "kind": "collectionType",
+  "collectionName": "order_buys",
+  "info": {
+    "singularName": "order-buy",
+    "pluralName": "order-buys",
+    "displayName": "Order-Buy"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "fechaOrden": {
+      "type": "date"
+    },
+    "estado": {
+      "type": "boolean"
+    },
+    "igv": {
+      "type": "decimal"
+    },
+    "provider": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::provider.provider",
+      "inversedBy": "order_buys"
+    },
+    "detail_order_buys": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::detail-order-buy.detail-order-buy",
+      "mappedBy": "order_buy"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "order_buys"
+    }
+  }
+}

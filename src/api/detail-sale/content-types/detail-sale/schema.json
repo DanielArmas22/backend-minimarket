@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "detail_sales",
+  "info": {
+    "singularName": "detail-sale",
+    "pluralName": "detail-sales",
+    "displayName": "Detail-Sale"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "cantidad": {
+      "type": "integer"
+    },
+    "sale": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::sale.sale",
+      "inversedBy": "detail_sales"
+    },
+    "product": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product.product",
+      "inversedBy": "detail_sales"
+    }
+  }
+}

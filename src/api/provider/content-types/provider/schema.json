@@ -1,0 +1,37 @@
+{
+  "kind": "collectionType",
+  "collectionName": "providers",
+  "info": {
+    "singularName": "provider",
+    "pluralName": "providers",
+    "displayName": "Provider"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "razonSocial": {
+      "type": "string"
+    },
+    "ruc": {
+      "type": "string",
+      "unique": true
+    },
+    "telefono": {
+      "type": "string"
+    },
+    "email": {
+      "type": "email"
+    },
+    "estado": {
+      "type": "boolean"
+    },
+    "order_buys": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::order-buy.order-buy",
+      "mappedBy": "provider"
+    }
+  }
+}
