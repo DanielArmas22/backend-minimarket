@@ -503,52 +503,6 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiCollaboratorCollaborator
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'collaborators';
-  info: {
-    displayName: 'Collaborator';
-    pluralName: 'collaborators';
-    singularName: 'collaborator';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    codigo_empleado: Schema.Attribute.String & Schema.Attribute.Unique;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    direccion: Schema.Attribute.Text;
-    dni: Schema.Attribute.String & Schema.Attribute.Unique;
-    email: Schema.Attribute.Email & Schema.Attribute.Unique;
-    estado: Schema.Attribute.String;
-    fecha_contratacion: Schema.Attribute.Date;
-    fecha_nacimiento: Schema.Attribute.Date;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::collaborator.collaborator'
-    > &
-      Schema.Attribute.Private;
-    nombres: Schema.Attribute.String;
-    publishedAt: Schema.Attribute.DateTime;
-    puesto: Schema.Attribute.String;
-    salario: Schema.Attribute.Decimal;
-    telefono: Schema.Attribute.String &
-      Schema.Attribute.SetMinMaxLength<{
-        maxLength: 9;
-      }>;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    users_permissions_users: Schema.Attribute.Relation<
-      'oneToMany',
-      'plugin::users-permissions.user'
-    >;
-  };
-}
-
 export interface ApiDetailOrderBuyDetailOrderBuy
   extends Struct.CollectionTypeSchema {
   collectionName: 'detail_order_buys';
@@ -865,38 +819,6 @@ export interface ApiProviderProvider extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-  };
-}
-
-export interface ApiRolRol extends Struct.CollectionTypeSchema {
-  collectionName: 'rols';
-  info: {
-    displayName: 'Rol';
-    pluralName: 'rols';
-    singularName: 'rol';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    descripcion: Schema.Attribute.Text;
-    estado: Schema.Attribute.String;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<'oneToMany', 'api::rol.rol'> &
-      Schema.Attribute.Private;
-    nombre: Schema.Attribute.String;
-    permisos: Schema.Attribute.JSON;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    users_permissions_users: Schema.Attribute.Relation<
-      'oneToMany',
-      'plugin::users-permissions.user'
-    >;
   };
 }
 
@@ -1422,10 +1344,6 @@ export interface PluginUsersPermissionsUser
   };
   attributes: {
     blocked: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
-    collaborator: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::collaborator.collaborator'
-    >;
     confirmationToken: Schema.Attribute.String & Schema.Attribute.Private;
     confirmed: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
     createdAt: Schema.Attribute.DateTime;
@@ -1443,6 +1361,7 @@ export interface PluginUsersPermissionsUser
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
+    name: Schema.Attribute.String;
     order_buys: Schema.Attribute.Relation<
       'oneToMany',
       'api::order-buy.order-buy'
@@ -1456,7 +1375,6 @@ export interface PluginUsersPermissionsUser
     provider: Schema.Attribute.String;
     publishedAt: Schema.Attribute.DateTime;
     resetPasswordToken: Schema.Attribute.String & Schema.Attribute.Private;
-    rol: Schema.Attribute.Relation<'manyToOne', 'api::rol.rol'>;
     role: Schema.Attribute.Relation<
       'manyToOne',
       'plugin::users-permissions.role'
@@ -1488,7 +1406,6 @@ declare module '@strapi/strapi' {
       'api::article.article': ApiArticleArticle;
       'api::author.author': ApiAuthorAuthor;
       'api::category.category': ApiCategoryCategory;
-      'api::collaborator.collaborator': ApiCollaboratorCollaborator;
       'api::detail-order-buy.detail-order-buy': ApiDetailOrderBuyDetailOrderBuy;
       'api::detail-sale.detail-sale': ApiDetailSaleDetailSale;
       'api::global.global': ApiGlobalGlobal;
@@ -1498,7 +1415,6 @@ declare module '@strapi/strapi' {
       'api::producto-promocion.producto-promocion': ApiProductoPromocionProductoPromocion;
       'api::promotion.promotion': ApiPromotionPromotion;
       'api::provider.provider': ApiProviderProvider;
-      'api::rol.rol': ApiRolRol;
       'api::sale.sale': ApiSaleSale;
       'api::type-buy.type-buy': ApiTypeBuyTypeBuy;
       'plugin::content-releases.release': PluginContentReleasesRelease;

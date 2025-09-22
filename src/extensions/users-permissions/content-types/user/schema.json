@@ -66,18 +66,6 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "rol": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::rol.rol",
-      "inversedBy": "users_permissions_users"
-    },
-    "collaborator": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::collaborator.collaborator",
-      "inversedBy": "users_permissions_users"
-    },
     "estado": {
       "type": "boolean"
     },
@@ -98,6 +86,9 @@
       "relation": "oneToMany",
       "target": "api::pay.pay",
       "mappedBy": "users_permissions_user"
+    },
+    "name": {
+      "type": "string"
     }
   }
 }
