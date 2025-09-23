@@ -1,0 +1,25 @@
+/**
+ * role router
+ */
+
+import { factories } from '@strapi/strapi';
+
+export default factories.createCoreRouter('api::role.role' as any, {
+  config: {
+    find: {
+      middlewares: [],
+    },
+    findOne: {
+      middlewares: [],
+    },
+    create: {
+      middlewares: [],
+    },
+    update: {
+      middlewares: [],
+    },
+    delete: {
+      middlewares: [],
+    },
+  },
+});
