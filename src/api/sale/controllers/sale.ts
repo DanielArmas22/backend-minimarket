@@ -16,6 +16,17 @@ export default factories.createCoreController('api::sale.sale', ({ strapi }) => 
 
       console.log('Datos recibidos:', JSON.stringify(data, null, 2));
 
+      //crear Pago
+        const payment = await strapi.entityService.create('api::pay.pay', {
+          data:{
+            fechaPago: data.fechaVenta || new Date(),
+            type_pay: data.tipoPago,
+            users_permissions_user: null,
+            publishedAt: new Date()
+          }
+        });
+
+
       // Iniciar transacción
       const result = await strapi.db.transaction(async (trx) => {
         // 1. Crear la venta
@@ -24,7 +35,7 @@ export default factories.createCoreController('api::sale.sale', ({ strapi }) => 
             date: data.fechaVenta || new Date(),
             total: data.totalVenta || 0,
             users_permissions_user: null, // Por ahora null como solicitas
-            payment: null, // Por ahora null como solicitas
+            payment: payment.id, // Por ahora null como solicitas
             publishedAt: new Date()
           }
         });
@@ -80,6 +91,10 @@ export default factories.createCoreController('api::sale.sale', ({ strapi }) => 
           console.log('Detail sale creado:', detailSale);
           detailSales.push(detailSale);
         }
+
+        
+
+
 
         return {
           sale,
