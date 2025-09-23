@@ -545,7 +545,7 @@ export interface ApiDetailSaleDetailSale extends Struct.CollectionTypeSchema {
     singularName: 'detail-sale';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     cantidad: Schema.Attribute.Integer;
@@ -646,7 +646,7 @@ export interface ApiPayPay extends Struct.CollectionTypeSchema {
     singularName: 'pay';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
@@ -677,7 +677,7 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
     singularName: 'product';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     barCode: Schema.Attribute.String & Schema.Attribute.Unique;
@@ -830,7 +830,7 @@ export interface ApiSaleSale extends Struct.CollectionTypeSchema {
     singularName: 'sale';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
@@ -864,7 +864,7 @@ export interface ApiTypeBuyTypeBuy extends Struct.CollectionTypeSchema {
     singularName: 'type-buy';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     createdAt: Schema.Attribute.DateTime;
