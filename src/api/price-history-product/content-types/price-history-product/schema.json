@@ -1,0 +1,27 @@
+{
+  "kind": "collectionType",
+  "collectionName": "price_history_products",
+  "info": {
+    "singularName": "price-history-product",
+    "pluralName": "price-history-products",
+    "displayName": "Price-history-product"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "precio": {
+      "type": "decimal"
+    },
+    "product": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product.product",
+      "inversedBy": "price_history_products"
+    },
+    "fechaActualizacion": {
+      "type": "datetime"
+    }
+  }
+}

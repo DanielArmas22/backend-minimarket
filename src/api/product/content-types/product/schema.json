@@ -53,6 +53,12 @@
     },
     "stockMin": {
       "type": "integer"
+    },
+    "price_history_products": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::price-history-product.price-history-product",
+      "mappedBy": "product"
     }
   }
 }

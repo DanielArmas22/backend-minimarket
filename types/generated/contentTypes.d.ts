@@ -669,6 +669,37 @@ export interface ApiPayPay extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiPriceHistoryProductPriceHistoryProduct
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'price_history_products';
+  info: {
+    displayName: 'Price-history-product';
+    pluralName: 'price-history-products';
+    singularName: 'price-history-product';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    fechaActualizacion: Schema.Attribute.DateTime;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::price-history-product.price-history-product'
+    > &
+      Schema.Attribute.Private;
+    precio: Schema.Attribute.Decimal;
+    product: Schema.Attribute.Relation<'manyToOne', 'api::product.product'>;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiProductProduct extends Struct.CollectionTypeSchema {
   collectionName: 'products';
   info: {
@@ -701,6 +732,10 @@ export interface ApiProductProduct extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     precioUnitario: Schema.Attribute.Decimal;
+    price_history_products: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::price-history-product.price-history-product'
+    >;
     producto_promocions: Schema.Attribute.Relation<
       'oneToMany',
       'api::producto-promocion.producto-promocion'
@@ -816,6 +851,49 @@ export interface ApiProviderProvider extends Struct.CollectionTypeSchema {
     razonSocial: Schema.Attribute.String;
     ruc: Schema.Attribute.String & Schema.Attribute.Unique;
     telefono: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiRoleRole extends Struct.CollectionTypeSchema {
+  collectionName: 'roles';
+  info: {
+    description: 'Sistema de roles para usuarios';
+    displayName: 'Role';
+    pluralName: 'roles';
+    singularName: 'role';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    activo: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    descripcion: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::role.role'> &
+      Schema.Attribute.Private;
+    nivel: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 10;
+          min: 1;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<1>;
+    nombre: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    permisos: Schema.Attribute.JSON & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1411,10 +1489,12 @@ declare module '@strapi/strapi' {
       'api::global.global': ApiGlobalGlobal;
       'api::order-buy.order-buy': ApiOrderBuyOrderBuy;
       'api::pay.pay': ApiPayPay;
+      'api::price-history-product.price-history-product': ApiPriceHistoryProductPriceHistoryProduct;
       'api::product.product': ApiProductProduct;
       'api::producto-promocion.producto-promocion': ApiProductoPromocionProductoPromocion;
       'api::promotion.promotion': ApiPromotionPromotion;
       'api::provider.provider': ApiProviderProvider;
+      'api::role.role': ApiRoleRole;
       'api::sale.sale': ApiSaleSale;
       'api::type-buy.type-buy': ApiTypeBuyTypeBuy;
       'plugin::content-releases.release': PluginContentReleasesRelease;
