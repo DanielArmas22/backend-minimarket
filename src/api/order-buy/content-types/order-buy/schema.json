@@ -15,10 +15,21 @@
       "type": "date"
     },
     "estado": {
-      "type": "boolean"
+      "type": "enumeration",
+      "enum": ["pendiente", "recibida", "cancelada"],
+      "default": "pendiente"
+    },
+    "subtotal": {
+      "type": "decimal"
     },
     "igv": {
       "type": "decimal"
+    },
+    "total": {
+      "type": "decimal"
+    },
+    "observaciones": {
+      "type": "text"
     },
     "provider": {
       "type": "relation",
@@ -35,8 +46,7 @@
     "users_permissions_user": {
       "type": "relation",
       "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "order_buys"
+      "target": "plugin::users-permissions.user"
     }
   }
 }

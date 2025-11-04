@@ -592,8 +592,10 @@ export interface ApiDetailOrderBuyDetailOrderBuy
       'manyToOne',
       'api::order-buy.order-buy'
     >;
+    precioUnitario: Schema.Attribute.Decimal;
     product: Schema.Attribute.Relation<'manyToOne', 'api::product.product'>;
     publishedAt: Schema.Attribute.DateTime;
+    subtotal: Schema.Attribute.Decimal;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -732,7 +734,10 @@ export interface ApiOrderBuyOrderBuy extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::detail-order-buy.detail-order-buy'
     >;
-    estado: Schema.Attribute.Boolean;
+    estado: Schema.Attribute.Enumeration<
+      ['pendiente', 'recibida', 'cancelada']
+    > &
+      Schema.Attribute.DefaultTo<'pendiente'>;
     fechaOrden: Schema.Attribute.Date;
     igv: Schema.Attribute.Decimal;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
@@ -741,8 +746,11 @@ export interface ApiOrderBuyOrderBuy extends Struct.CollectionTypeSchema {
       'api::order-buy.order-buy'
     > &
       Schema.Attribute.Private;
+    observaciones: Schema.Attribute.Text;
     provider: Schema.Attribute.Relation<'manyToOne', 'api::provider.provider'>;
     publishedAt: Schema.Attribute.DateTime;
+    subtotal: Schema.Attribute.Decimal;
+    total: Schema.Attribute.Decimal;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
