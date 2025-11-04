@@ -618,6 +618,7 @@ export interface ApiOrderBuyOrderBuy extends Struct.CollectionTypeSchema {
       'api::detail-order-buy.detail-order-buy'
     >;
     estado: Schema.Attribute.Boolean;
+    FechaEntrega: Schema.Attribute.DateTime;
     fechaOrden: Schema.Attribute.Date;
     igv: Schema.Attribute.Decimal;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
