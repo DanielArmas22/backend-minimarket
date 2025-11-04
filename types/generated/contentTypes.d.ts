@@ -662,6 +662,58 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiInventoryAdjustmentInventoryAdjustment
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'inventory_adjustments';
+  info: {
+    description: 'Registro de ajustes de inventario';
+    displayName: 'Inventory Adjustment';
+    pluralName: 'inventory-adjustments';
+    singularName: 'inventory-adjustment';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    adjustmentDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    adjustmentType: Schema.Attribute.Enumeration<['increase', 'decrease']> &
+      Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::inventory-adjustment.inventory-adjustment'
+    > &
+      Schema.Attribute.Private;
+    newStock: Schema.Attribute.BigInteger & Schema.Attribute.Required;
+    previousStock: Schema.Attribute.BigInteger & Schema.Attribute.Required;
+    product: Schema.Attribute.Relation<'manyToOne', 'api::product.product'>;
+    publishedAt: Schema.Attribute.DateTime;
+    quantity: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      >;
+    reason: Schema.Attribute.Enumeration<
+      ['merma', 'conteo', 'da\u00F1o', 'devolucion', 'correccion', 'otro']
+    > &
+      Schema.Attribute.Required;
+    reasonDescription: Schema.Attribute.Text;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiOrderBuyOrderBuy extends Struct.CollectionTypeSchema {
   collectionName: 'order_buys';
   info: {
@@ -1520,6 +1572,7 @@ declare module '@strapi/strapi' {
       'api::detail-order-buy.detail-order-buy': ApiDetailOrderBuyDetailOrderBuy;
       'api::detail-sale.detail-sale': ApiDetailSaleDetailSale;
       'api::global.global': ApiGlobalGlobal;
+      'api::inventory-adjustment.inventory-adjustment': ApiInventoryAdjustmentInventoryAdjustment;
       'api::order-buy.order-buy': ApiOrderBuyOrderBuy;
       'api::pay.pay': ApiPayPay;
       'api::product.product': ApiProductProduct;
