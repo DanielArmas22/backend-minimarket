@@ -2,51 +2,73 @@
  * cash-register router
  */
 
-import { factories } from '@strapi/strapi';
-
-const defaultRouter = factories.createCoreRouter('api::cash-register.cash-register');
-
-const customRouter = (innerRouter, extraRoutes = []) => {
-  let routes;
-  return {
-    get prefix() {
-      return innerRouter.prefix;
+export default {
+  routes: [
+    // Rutas personalizadas PRIMERO (antes de las rutas con parámetros)
+    {
+      method: 'GET',
+      path: '/cash-registers/current-open',
+      handler: 'cash-register.getCurrentOpen',
+      config: {
+        auth: false,
+      },
     },
-    get routes() {
-      if (!routes) routes = innerRouter.routes.concat(extraRoutes);
-      return routes;
+    {
+      method: 'POST',
+      path: '/cash-registers/open',
+      handler: 'cash-register.open',
+      config: {
+        auth: false,
+      },
     },
-  };
+    {
+      method: 'POST',
+      path: '/cash-registers/close',
+      handler: 'cash-register.close',
+      config: {
+        auth: false,
+      },
+    },
+    // Rutas CRUD estándar (con parámetros al final)
+    {
+      method: 'GET',
+      path: '/cash-registers',
+      handler: 'cash-register.find',
+      config: {
+        auth: false,
+      },
+    },
+    {
+      method: 'GET',
+      path: '/cash-registers/:id',
+      handler: 'cash-register.findOne',
+      config: {
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/cash-registers',
+      handler: 'cash-register.create',
+      config: {
+        auth: false,
+      },
+    },
+    {
+      method: 'PUT',
+      path: '/cash-registers/:id',
+      handler: 'cash-register.update',
+      config: {
+        auth: false,
+      },
+    },
+    {
+      method: 'DELETE',
+      path: '/cash-registers/:id',
+      handler: 'cash-register.delete',
+      config: {
+        auth: false,
+      },
+    },
+  ],
 };
-
-const myExtraRoutes = [
-  {
-    method: 'POST',
-    path: '/cash-registers/open',
-    handler: 'cash-register.open',
-    config: {
-      policies: [],
-      middlewares: [],
-    },
-  },
-  {
-    method: 'POST',
-    path: '/cash-registers/close',
-    handler: 'cash-register.close',
-    config: {
-      policies: [],
-      middlewares: [],
-    },
-  },
-  {
-    method: 'GET',
-    path: '/cash-registers/current-open',
-    handler: 'cash-register.getCurrentOpen',
-    config: {
-      policies: [],
-      middlewares: [],
-    },
-  },
-];
-
-export default customRouter(defaultRouter, myExtraRoutes);
