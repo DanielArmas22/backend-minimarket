@@ -473,6 +473,69 @@ export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCashRegisterCashRegister
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'cash_registers';
+  info: {
+    description: 'Registro de apertura y cierre de caja';
+    displayName: 'Cash Register';
+    pluralName: 'cash-registers';
+    singularName: 'cash-register';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    actualAmount: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    closingDate: Schema.Attribute.DateTime;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    difference: Schema.Attribute.Decimal;
+    expectedAmount: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    initialAmount: Schema.Attribute.Decimal &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::cash-register.cash-register'
+    > &
+      Schema.Attribute.Private;
+    notes: Schema.Attribute.Text;
+    openingDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    sales: Schema.Attribute.Relation<'oneToMany', 'api::sale.sale'>;
+    status: Schema.Attribute.Enumeration<['open', 'closed']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'open'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   collectionName: 'categories';
   info: {
@@ -822,6 +885,49 @@ export interface ApiProviderProvider extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiRoleRole extends Struct.CollectionTypeSchema {
+  collectionName: 'roles';
+  info: {
+    description: 'Sistema de roles para usuarios';
+    displayName: 'Role';
+    pluralName: 'roles';
+    singularName: 'role';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    activo: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    descripcion: Schema.Attribute.Text;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<'oneToMany', 'api::role.role'> &
+      Schema.Attribute.Private;
+    nivel: Schema.Attribute.Integer &
+      Schema.Attribute.SetMinMax<
+        {
+          max: 10;
+          min: 1;
+        },
+        number
+      > &
+      Schema.Attribute.DefaultTo<1>;
+    nombre: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique &
+      Schema.Attribute.SetMinMaxLength<{
+        maxLength: 100;
+      }>;
+    permisos: Schema.Attribute.JSON & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiSaleSale extends Struct.CollectionTypeSchema {
   collectionName: 'sales';
   info: {
@@ -833,6 +939,10 @@ export interface ApiSaleSale extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
+    cash_register: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::cash-register.cash-register'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1405,6 +1515,7 @@ declare module '@strapi/strapi' {
       'api::about.about': ApiAboutAbout;
       'api::article.article': ApiArticleArticle;
       'api::author.author': ApiAuthorAuthor;
+      'api::cash-register.cash-register': ApiCashRegisterCashRegister;
       'api::category.category': ApiCategoryCategory;
       'api::detail-order-buy.detail-order-buy': ApiDetailOrderBuyDetailOrderBuy;
       'api::detail-sale.detail-sale': ApiDetailSaleDetailSale;
@@ -1415,6 +1526,7 @@ declare module '@strapi/strapi' {
       'api::producto-promocion.producto-promocion': ApiProductoPromocionProductoPromocion;
       'api::promotion.promotion': ApiPromotionPromotion;
       'api::provider.provider': ApiProviderProvider;
+      'api::role.role': ApiRoleRole;
       'api::sale.sale': ApiSaleSale;
       'api::type-buy.type-buy': ApiTypeBuyTypeBuy;
       'plugin::content-releases.release': PluginContentReleasesRelease;
