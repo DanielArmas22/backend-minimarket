@@ -15,10 +15,21 @@
       "type": "date"
     },
     "estado": {
-      "type": "boolean"
+      "type": "enumeration",
+      "enum": ["pendiente", "recibida", "cancelada"],
+      "default": "pendiente"
+    },
+    "subtotal": {
+      "type": "decimal"
     },
     "igv": {
       "type": "decimal"
+    },
+    "total": {
+      "type": "decimal"
+    },
+    "observaciones": {
+      "type": "text"
     },
     "provider": {
       "type": "relation",

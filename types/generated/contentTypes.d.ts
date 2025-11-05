@@ -473,6 +473,69 @@ export interface ApiAuthorAuthor extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCashRegisterCashRegister
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'cash_registers';
+  info: {
+    description: 'Registro de apertura y cierre de caja';
+    displayName: 'Cash Register';
+    pluralName: 'cash-registers';
+    singularName: 'cash-register';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    actualAmount: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    closingDate: Schema.Attribute.DateTime;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    difference: Schema.Attribute.Decimal;
+    expectedAmount: Schema.Attribute.Decimal &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    initialAmount: Schema.Attribute.Decimal &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 0;
+        },
+        number
+      >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::cash-register.cash-register'
+    > &
+      Schema.Attribute.Private;
+    notes: Schema.Attribute.Text;
+    openingDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    sales: Schema.Attribute.Relation<'oneToMany', 'api::sale.sale'>;
+    status: Schema.Attribute.Enumeration<['open', 'closed']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'open'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   collectionName: 'categories';
   info: {
@@ -529,8 +592,10 @@ export interface ApiDetailOrderBuyDetailOrderBuy
       'manyToOne',
       'api::order-buy.order-buy'
     >;
+    precioUnitario: Schema.Attribute.Decimal;
     product: Schema.Attribute.Relation<'manyToOne', 'api::product.product'>;
     publishedAt: Schema.Attribute.DateTime;
+    subtotal: Schema.Attribute.Decimal;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -599,6 +664,58 @@ export interface ApiGlobalGlobal extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiInventoryAdjustmentInventoryAdjustment
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'inventory_adjustments';
+  info: {
+    description: 'Registro de ajustes de inventario';
+    displayName: 'Inventory Adjustment';
+    pluralName: 'inventory-adjustments';
+    singularName: 'inventory-adjustment';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    adjustmentDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
+    adjustmentType: Schema.Attribute.Enumeration<['increase', 'decrease']> &
+      Schema.Attribute.Required;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::inventory-adjustment.inventory-adjustment'
+    > &
+      Schema.Attribute.Private;
+    newStock: Schema.Attribute.BigInteger & Schema.Attribute.Required;
+    previousStock: Schema.Attribute.BigInteger & Schema.Attribute.Required;
+    product: Schema.Attribute.Relation<'manyToOne', 'api::product.product'>;
+    publishedAt: Schema.Attribute.DateTime;
+    quantity: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.SetMinMax<
+        {
+          min: 1;
+        },
+        number
+      >;
+    reason: Schema.Attribute.Enumeration<
+      ['merma', 'conteo', 'da\u00F1o', 'devolucion', 'correccion', 'otro']
+    > &
+      Schema.Attribute.Required;
+    reasonDescription: Schema.Attribute.Text;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiOrderBuyOrderBuy extends Struct.CollectionTypeSchema {
   collectionName: 'order_buys';
   info: {
@@ -617,7 +734,10 @@ export interface ApiOrderBuyOrderBuy extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::detail-order-buy.detail-order-buy'
     >;
-    estado: Schema.Attribute.Boolean;
+    estado: Schema.Attribute.Enumeration<
+      ['pendiente', 'recibida', 'cancelada']
+    > &
+      Schema.Attribute.DefaultTo<'pendiente'>;
     FechaEntrega: Schema.Attribute.DateTime;
     fechaOrden: Schema.Attribute.Date;
     igv: Schema.Attribute.Decimal;
@@ -627,8 +747,11 @@ export interface ApiOrderBuyOrderBuy extends Struct.CollectionTypeSchema {
       'api::order-buy.order-buy'
     > &
       Schema.Attribute.Private;
+    observaciones: Schema.Attribute.Text;
     provider: Schema.Attribute.Relation<'manyToOne', 'api::provider.provider'>;
     publishedAt: Schema.Attribute.DateTime;
+    subtotal: Schema.Attribute.Decimal;
+    total: Schema.Attribute.Decimal;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -912,6 +1035,10 @@ export interface ApiSaleSale extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
+    cash_register: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::cash-register.cash-register'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1484,10 +1611,12 @@ declare module '@strapi/strapi' {
       'api::about.about': ApiAboutAbout;
       'api::article.article': ApiArticleArticle;
       'api::author.author': ApiAuthorAuthor;
+      'api::cash-register.cash-register': ApiCashRegisterCashRegister;
       'api::category.category': ApiCategoryCategory;
       'api::detail-order-buy.detail-order-buy': ApiDetailOrderBuyDetailOrderBuy;
       'api::detail-sale.detail-sale': ApiDetailSaleDetailSale;
       'api::global.global': ApiGlobalGlobal;
+      'api::inventory-adjustment.inventory-adjustment': ApiInventoryAdjustmentInventoryAdjustment;
       'api::order-buy.order-buy': ApiOrderBuyOrderBuy;
       'api::pay.pay': ApiPayPay;
       'api::price-history-product.price-history-product': ApiPriceHistoryProductPriceHistoryProduct;

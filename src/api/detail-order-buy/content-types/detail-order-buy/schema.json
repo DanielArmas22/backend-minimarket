@@ -14,6 +14,12 @@
     "cantidad": {
       "type": "integer"
     },
+    "precioUnitario": {
+      "type": "decimal"
+    },
+    "subtotal": {
+      "type": "decimal"
+    },
     "product": {
       "type": "relation",
       "relation": "manyToOne",

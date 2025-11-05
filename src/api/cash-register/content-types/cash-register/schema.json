@@ -1,0 +1,59 @@
+{
+  "kind": "collectionType",
+  "collectionName": "cash_registers",
+  "info": {
+    "singularName": "cash-register",
+    "pluralName": "cash-registers",
+    "displayName": "Cash Register",
+    "description": "Registro de apertura y cierre de caja"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "openingDate": {
+      "type": "datetime",
+      "required": true
+    },
+    "closingDate": {
+      "type": "datetime"
+    },
+    "initialAmount": {
+      "type": "decimal",
+      "required": true,
+      "min": 0
+    },
+    "expectedAmount": {
+      "type": "decimal",
+      "min": 0
+    },
+    "actualAmount": {
+      "type": "decimal",
+      "min": 0
+    },
+    "difference": {
+      "type": "decimal"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": ["open", "closed"],
+      "default": "open",
+      "required": true
+    },
+    "notes": {
+      "type": "text"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "sales": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::sale.sale",
+      "mappedBy": "cash_register"
+    }
+  }
+}
