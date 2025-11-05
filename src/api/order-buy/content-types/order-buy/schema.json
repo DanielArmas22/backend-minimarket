@@ -16,7 +16,7 @@
     },
     "estado": {
       "type": "enumeration",
-      "enum": ["pendiente", "recibida", "cancelada"],
+      "enum": ["pendiente", "aprobada", "recibida", "rechazada", "cancelada", "en_revision"],
       "default": "pendiente"
     },
     "subtotal": {
@@ -51,6 +51,53 @@
     },
     "FechaEntrega": {
       "type": "datetime"
+    },
+    "approvedAt": {
+      "type": "datetime"
+    },
+    "approvalNotes": {
+      "type": "text"
+    },
+    "approvedBy": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "rejectionReason": {
+      "type": "enumeration",
+      "enum": [
+        "precio",
+        "proveedor",
+        "cantidad",
+        "prioridad",
+        "presupuesto",
+        "otro"
+      ]
+    },
+    "rejectionDetails": {
+      "type": "text"
+    },
+    "rejectedAt": {
+      "type": "datetime"
+    },
+    "rejectedBy": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    },
+    "modificationAspects": {
+      "type": "json"
+    },
+    "modificationDetails": {
+      "type": "text"
+    },
+    "modificationRequestedAt": {
+      "type": "datetime"
+    },
+    "modificationRequestedBy": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
     }
   }
 }

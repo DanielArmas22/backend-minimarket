@@ -23,6 +23,30 @@ export default {
     },
     {
       method: 'POST',
+      path: '/order-buys/approve',
+      handler: 'order-buy.approveOrder',
+      config: {
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/order-buys/reject',
+      handler: 'order-buy.rejectOrder',
+      config: {
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
+      path: '/order-buys/request-changes',
+      handler: 'order-buy.requestChanges',
+      config: {
+        auth: false,
+      },
+    },
+    {
+      method: 'POST',
       path: '/order-buys/cancel',
       handler: 'order-buy.cancelOrder',
       config: {

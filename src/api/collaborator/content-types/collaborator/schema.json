@@ -1,0 +1,58 @@
+{
+  "kind": "collectionType",
+  "collectionName": "collaborators",
+  "info": {
+    "singularName": "collaborator",
+    "pluralName": "collaborators",
+    "displayName": "Collaborator",
+    "description": "Colaboradores (empleados) del minimarket"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "nombres": {
+      "type": "string",
+      "required": true
+    },
+    "dni": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "fechaNacimiento": {
+      "type": "date"
+    },
+    "direccion": {
+      "type": "string"
+    },
+    "telefono": {
+      "type": "string"
+    },
+    "correo": {
+      "type": "email"
+    },
+    "puesto": {
+      "type": "enumeration",
+      "enum": ["cajero", "almacenero", "supervisor", "vendedor", "otro"],
+      "required": true
+    },
+    "fechaIngreso": {
+      "type": "date",
+      "required": true
+    },
+    "horarioAsignado": {
+      "type": "string"
+    },
+    "estado": {
+      "type": "boolean",
+      "default": true
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}
+

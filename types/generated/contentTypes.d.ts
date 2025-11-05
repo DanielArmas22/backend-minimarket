@@ -566,6 +566,54 @@ export interface ApiCategoryCategory extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiCollaboratorCollaborator
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'collaborators';
+  info: {
+    description: 'Colaboradores (empleados) del minimarket';
+    displayName: 'Collaborator';
+    pluralName: 'collaborators';
+    singularName: 'collaborator';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    correo: Schema.Attribute.Email;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    direccion: Schema.Attribute.String;
+    dni: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.Unique;
+    estado: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<true>;
+    fechaIngreso: Schema.Attribute.Date & Schema.Attribute.Required;
+    fechaNacimiento: Schema.Attribute.Date;
+    horarioAsignado: Schema.Attribute.String;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::collaborator.collaborator'
+    > &
+      Schema.Attribute.Private;
+    nombres: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    puesto: Schema.Attribute.Enumeration<
+      ['cajero', 'almacenero', 'supervisor', 'vendedor', 'otro']
+    > &
+      Schema.Attribute.Required;
+    telefono: Schema.Attribute.String;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    users_permissions_user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiDetailOrderBuyDetailOrderBuy
   extends Struct.CollectionTypeSchema {
   collectionName: 'detail_order_buys';
@@ -727,6 +775,12 @@ export interface ApiOrderBuyOrderBuy extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    approvalNotes: Schema.Attribute.Text;
+    approvedAt: Schema.Attribute.DateTime;
+    approvedBy: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -735,7 +789,14 @@ export interface ApiOrderBuyOrderBuy extends Struct.CollectionTypeSchema {
       'api::detail-order-buy.detail-order-buy'
     >;
     estado: Schema.Attribute.Enumeration<
-      ['pendiente', 'recibida', 'cancelada']
+      [
+        'pendiente',
+        'aprobada',
+        'recibida',
+        'rechazada',
+        'cancelada',
+        'en_revision',
+      ]
     > &
       Schema.Attribute.DefaultTo<'pendiente'>;
     FechaEntrega: Schema.Attribute.DateTime;
@@ -747,9 +808,25 @@ export interface ApiOrderBuyOrderBuy extends Struct.CollectionTypeSchema {
       'api::order-buy.order-buy'
     > &
       Schema.Attribute.Private;
+    modificationAspects: Schema.Attribute.JSON;
+    modificationDetails: Schema.Attribute.Text;
+    modificationRequestedAt: Schema.Attribute.DateTime;
+    modificationRequestedBy: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
     observaciones: Schema.Attribute.Text;
     provider: Schema.Attribute.Relation<'manyToOne', 'api::provider.provider'>;
     publishedAt: Schema.Attribute.DateTime;
+    rejectedAt: Schema.Attribute.DateTime;
+    rejectedBy: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
+    rejectionDetails: Schema.Attribute.Text;
+    rejectionReason: Schema.Attribute.Enumeration<
+      ['precio', 'proveedor', 'cantidad', 'prioridad', 'presupuesto', 'otro']
+    >;
     subtotal: Schema.Attribute.Decimal;
     total: Schema.Attribute.Decimal;
     updatedAt: Schema.Attribute.DateTime;
@@ -1613,6 +1690,7 @@ declare module '@strapi/strapi' {
       'api::author.author': ApiAuthorAuthor;
       'api::cash-register.cash-register': ApiCashRegisterCashRegister;
       'api::category.category': ApiCategoryCategory;
+      'api::collaborator.collaborator': ApiCollaboratorCollaborator;
       'api::detail-order-buy.detail-order-buy': ApiDetailOrderBuyDetailOrderBuy;
       'api::detail-sale.detail-sale': ApiDetailSaleDetailSale;
       'api::global.global': ApiGlobalGlobal;

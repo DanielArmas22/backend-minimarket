@@ -154,6 +154,10 @@ export default factories.createCoreController('api::order-buy.order-buy', ({ str
         return ctx.badRequest('No se puede recibir una orden cancelada');
       }
 
+      if (order.estado !== 'aprobada') {
+        return ctx.badRequest('La orden debe estar aprobada antes de poder ser recibida');
+      }
+
       // Usar transacción
       const result = await strapi.db.transaction(async () => {
         const updatedProducts = [];
@@ -254,6 +258,159 @@ export default factories.createCoreController('api::order-buy.order-buy', ({ str
       console.error('Error al cancelar orden:', error);
       strapi.log.error('Error al cancelar orden:', error);
       return ctx.badRequest(error.message || 'Error al cancelar la orden');
+    }
+  },
+
+  // Aprobar orden de compra
+  async approveOrder(ctx) {
+    try {
+      const { orderId, approverUserId, notes } = ctx.request.body;
+
+      if (!orderId) {
+        return ctx.badRequest('Debe proporcionar el ID de la orden');
+      }
+
+      const order: any = await strapi.entityService.findOne('api::order-buy.order-buy', orderId, {
+        populate: ['provider', 'detail_order_buys', 'users_permissions_user']
+      });
+
+      if (!order) {
+        return ctx.notFound('Orden de compra no encontrada');
+      }
+
+      if (order.estado !== 'pendiente') {
+        return ctx.badRequest('Solo se pueden aprobar órdenes en estado pendiente');
+      }
+
+      // Validación de permisos mínima
+      if (approverUserId) {
+        const approver = await strapi.query('plugin::users-permissions.user').findOne({ where: { id: approverUserId }, populate: ['role'] });
+        const roleName = approver?.role?.name || '';
+        if (roleName && !['Gerente', 'Administrador'].includes(roleName)) {
+          return ctx.forbidden('No tiene permisos para aprobar órdenes');
+        }
+      }
+
+      const updated = await strapi.entityService.update('api::order-buy.order-buy', orderId, {
+        data: {
+          estado: 'aprobada',
+          approvedAt: new Date(),
+          approvalNotes: notes || null,
+          approvedBy: approverUserId || null,
+        },
+        populate: ['provider', 'detail_order_buys', 'users_permissions_user']
+      });
+
+      return {
+        data: updated,
+        message: `Orden de compra #${orderId} aprobada exitosamente`
+      };
+    } catch (error) {
+      console.error('Error al aprobar orden:', error);
+      strapi.log.error('Error al aprobar orden:', error);
+      return ctx.badRequest(error.message || 'Error al aprobar la orden');
+    }
+  },
+
+  // Rechazar orden de compra
+  async rejectOrder(ctx) {
+    try {
+      const { orderId, approverUserId, reason, details } = ctx.request.body;
+
+      if (!orderId) {
+        return ctx.badRequest('Debe proporcionar el ID de la orden');
+      }
+      if (!reason) {
+        return ctx.badRequest('Debe seleccionar un motivo de rechazo');
+      }
+      const validReasons = ['precio', 'proveedor', 'cantidad', 'prioridad', 'presupuesto', 'otro'];
+      if (!validReasons.includes(reason)) {
+        return ctx.badRequest('Motivo de rechazo inválido');
+      }
+      if (reason === 'otro' && (!details || !String(details).trim())) {
+        return ctx.badRequest('Debe especificar detalles cuando el motivo es "Otro"');
+      }
+
+      const order: any = await strapi.entityService.findOne('api::order-buy.order-buy', orderId);
+      if (!order) {
+        return ctx.notFound('Orden de compra no encontrada');
+      }
+      if (order.estado !== 'pendiente') {
+        return ctx.badRequest('Solo se pueden rechazar órdenes en estado pendiente');
+      }
+
+      if (approverUserId) {
+        const approver = await strapi.query('plugin::users-permissions.user').findOne({ where: { id: approverUserId }, populate: ['role'] });
+        const roleName = approver?.role?.name || '';
+        if (roleName && !['Gerente', 'Administrador'].includes(roleName)) {
+          return ctx.forbidden('No tiene permisos para rechazar órdenes');
+        }
+      }
+
+      const updated = await strapi.entityService.update('api::order-buy.order-buy', orderId, {
+        data: {
+          estado: 'rechazada',
+          rejectionReason: reason,
+          rejectionDetails: details || null,
+          rejectedAt: new Date(),
+          rejectedBy: approverUserId || null,
+        },
+        populate: ['provider', 'detail_order_buys', 'users_permissions_user']
+      });
+
+      return {
+        data: updated,
+        message: `Orden de compra #${orderId} rechazada`
+      };
+    } catch (error) {
+      console.error('Error al rechazar orden:', error);
+      strapi.log.error('Error al rechazar orden:', error);
+      return ctx.badRequest(error.message || 'Error al rechazar la orden');
+    }
+  },
+
+  // Solicitar modificaciones
+  async requestChanges(ctx) {
+    try {
+      const { orderId, requesterUserId, aspects, details } = ctx.request.body;
+
+      if (!orderId) {
+        return ctx.badRequest('Debe proporcionar el ID de la orden');
+      }
+      if (!Array.isArray(aspects) || aspects.length === 0) {
+        return ctx.badRequest('Debe seleccionar al menos un aspecto a modificar');
+      }
+      if (!details || !String(details).trim()) {
+        return ctx.badRequest('Debe detallar las modificaciones solicitadas');
+      }
+
+      const order: any = await strapi.entityService.findOne('api::order-buy.order-buy', orderId);
+      if (!order) {
+        return ctx.notFound('Orden de compra no encontrada');
+      }
+      if (order.estado !== 'pendiente') {
+        return ctx.badRequest('Solo se pueden solicitar cambios para órdenes pendientes');
+      }
+
+      const updated = await strapi.entityService.update('api::order-buy.order-buy', orderId, {
+        data: {
+          estado: 'en_revision',
+          modificationAspects: aspects,
+          modificationDetails: details,
+          modificationRequestedAt: new Date(),
+          modificationRequestedBy: requesterUserId || null,
+        },
+        populate: ['provider', 'detail_order_buys', 'users_permissions_user']
+      });
+
+      return {
+        data: updated,
+        message: `Solicitud de modificación enviada para la orden #${orderId}`
+      };
+    } catch (error) {
+      console.error('Error al solicitar modificaciones:', error);
+      strapi.log.error('Error al solicitar modificaciones:', error);
+      return ctx.badRequest(error.message || 'Error al solicitar modificaciones');
     }
   }
 }));
