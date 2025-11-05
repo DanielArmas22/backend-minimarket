@@ -31,6 +31,12 @@
       "relation": "manyToOne",
       "target": "api::pay.pay",
       "inversedBy": "sales"
+    },
+    "cash_register": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::cash-register.cash-register",
+      "inversedBy": "sales"
     }
   }
 }

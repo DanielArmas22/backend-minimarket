@@ -1,5 +1,5 @@
 /**
- * order-buy router
+ * inventory-adjustment router
  */
 
 export default {
@@ -7,24 +7,16 @@ export default {
     // Rutas personalizadas PRIMERO (antes de las rutas con parámetros)
     {
       method: 'POST',
-      path: '/order-buys/create-order',
-      handler: 'order-buy.createOrder',
+      path: '/inventory-adjustments/adjust',
+      handler: 'inventory-adjustment.adjust',
       config: {
         auth: false,
       },
     },
     {
-      method: 'POST',
-      path: '/order-buys/receive',
-      handler: 'order-buy.receiveOrder',
-      config: {
-        auth: false,
-      },
-    },
-    {
-      method: 'POST',
-      path: '/order-buys/cancel',
-      handler: 'order-buy.cancelOrder',
+      method: 'GET',
+      path: '/inventory-adjustments/product/:productId/history',
+      handler: 'inventory-adjustment.getProductHistory',
       config: {
         auth: false,
       },
@@ -32,40 +24,40 @@ export default {
     // Rutas CRUD estándar (con parámetros al final)
     {
       method: 'GET',
-      path: '/order-buys',
-      handler: 'order-buy.find',
+      path: '/inventory-adjustments',
+      handler: 'inventory-adjustment.find',
       config: {
         auth: false,
       },
     },
     {
       method: 'GET',
-      path: '/order-buys/:id',
-      handler: 'order-buy.findOne',
+      path: '/inventory-adjustments/:id',
+      handler: 'inventory-adjustment.findOne',
       config: {
         auth: false,
       },
     },
     {
       method: 'POST',
-      path: '/order-buys',
-      handler: 'order-buy.create',
+      path: '/inventory-adjustments',
+      handler: 'inventory-adjustment.create',
       config: {
         auth: false,
       },
     },
     {
       method: 'PUT',
-      path: '/order-buys/:id',
-      handler: 'order-buy.update',
+      path: '/inventory-adjustments/:id',
+      handler: 'inventory-adjustment.update',
       config: {
         auth: false,
       },
     },
     {
       method: 'DELETE',
-      path: '/order-buys/:id',
-      handler: 'order-buy.delete',
+      path: '/inventory-adjustments/:id',
+      handler: 'inventory-adjustment.delete',
       config: {
         auth: false,
       },

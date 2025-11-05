@@ -1,0 +1,56 @@
+{
+  "kind": "collectionType",
+  "collectionName": "inventory_adjustments",
+  "info": {
+    "singularName": "inventory-adjustment",
+    "pluralName": "inventory-adjustments",
+    "displayName": "Inventory Adjustment",
+    "description": "Registro de ajustes de inventario"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "adjustmentDate": {
+      "type": "datetime",
+      "required": true
+    },
+    "adjustmentType": {
+      "type": "enumeration",
+      "enum": ["increase", "decrease"],
+      "required": true
+    },
+    "quantity": {
+      "type": "integer",
+      "required": true,
+      "min": 1
+    },
+    "reason": {
+      "type": "enumeration",
+      "enum": ["merma", "conteo", "daño", "devolucion", "correccion", "otro"],
+      "required": true
+    },
+    "reasonDescription": {
+      "type": "text"
+    },
+    "previousStock": {
+      "type": "biginteger",
+      "required": true
+    },
+    "newStock": {
+      "type": "biginteger",
+      "required": true
+    },
+    "product": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::product.product"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}
